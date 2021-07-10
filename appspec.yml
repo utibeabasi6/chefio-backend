@@ -1,8 +1,14 @@
 
 version: 0.0
 os: linux
+files:
+  - source: /
+    destination: /home/ec2-user/Chefio
 hooks:
   ApplicationStart:
     - location: startup.sh
       timeout: 300
-  
+  ApplicationStop:
+    - location: stop_server.sh
+      timeout: 300
+      runas: root

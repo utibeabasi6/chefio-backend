@@ -5,10 +5,12 @@ files:
   - source: /
     destination: /home/ec2-user/Chefio
 hooks:
-  ApplicationStart:
-    - location: startup.sh
-      timeout: 300
   ApplicationStop:
     - location: stop_server.sh
       timeout: 300
-      runas: root
+      runas: ec2-user
+  ApplicationStart:
+    - location: startup.sh
+      timeout: 300
+      runas: ec2-user
+  

@@ -2,10 +2,9 @@
 version: 0.0
 os: linux
 files:
-  - source: /api
+  - source: /
     destination: /home/ec2-user/Chefio
-  - source: /docker-compose.yml
-    destination: /home/ec2-user/Chefio
+  
 hooks:
   ApplicationStart:
     - location: scripts/startup.sh

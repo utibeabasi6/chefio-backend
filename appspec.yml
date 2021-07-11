@@ -6,11 +6,11 @@ files:
     destination: /home/ec2-user/Chefio
 hooks:
   ApplicationStop:
-    - location: stop_server.sh
+    - location: scripts/stop_server.sh
       timeout: 300
       runas: ec2-user
   ApplicationStart:
-    - location: startup.sh
+    - location: scripts/startup.sh
       timeout: 300
       runas: ec2-user
   

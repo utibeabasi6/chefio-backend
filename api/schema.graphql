@@ -6,6 +6,7 @@ type User {
   name: String
   email: String
   password: PasswordState
+  image: ImageFieldOutput
   recipies(
     where: RecipieWhereInput! = {}
     search: String
@@ -72,10 +73,49 @@ type User {
       reason: "This query will be removed in a future version. Please use followersCount instead."
     )
   followersCount(where: UserWhereInput! = {}): Int
+  likes(
+    where: RecipieWhereInput! = {}
+    search: String
+    sortBy: [SortRecipiesBy!]
+      @deprecated(reason: "sortBy has been deprecated in favour of orderBy")
+    orderBy: [RecipieOrderByInput!]! = []
+    first: Int
+    skip: Int! = 0
+  ): [Recipie!]
+  _likesMeta(
+    where: RecipieWhereInput! = {}
+    search: String
+    sortBy: [SortRecipiesBy!]
+      @deprecated(reason: "sortBy has been deprecated in favour of orderBy")
+    orderBy: [RecipieOrderByInput!]! = []
+    first: Int
+    skip: Int! = 0
+  ): _QueryMeta
+    @deprecated(
+      reason: "This query will be removed in a future version. Please use likesCount instead."
+    )
+  likesCount(where: RecipieWhereInput! = {}): Int
 }
 
 type PasswordState {
   isSet: Boolean!
+}
+
+interface ImageFieldOutput {
+  id: ID!
+  filesize: Int!
+  width: Int!
+  height: Int!
+  extension: ImageExtension!
+  ref: String!
+  src: String!
+}
+
+enum ImageExtension {
+  jpg
+  png
+  webp
+  gif
 }
 
 type _QueryMeta {
@@ -175,6 +215,21 @@ input UserWhereInput {
    condition must be false for all nodes
   """
   followers_none: UserWhereInput
+
+  """
+   condition must be true for all nodes
+  """
+  likes_every: RecipieWhereInput
+
+  """
+   condition must be true for at least 1 node
+  """
+  likes_some: RecipieWhereInput
+
+  """
+   condition must be false for all nodes
+  """
+  likes_none: RecipieWhereInput
 }
 
 input UserWhereUniqueInput {
@@ -206,10 +261,22 @@ input UserUpdateInput {
   name: String
   email: String
   password: String
+  image: ImageFieldInput
   recipies: RecipieRelateToManyInput
   following: UserRelateToManyInput
   followers: UserRelateToManyInput
+  likes: RecipieRelateToManyInput
 }
+
+input ImageFieldInput {
+  upload: Upload
+  ref: String
+}
+
+"""
+The `Upload` scalar type represents a file upload.
+"""
+scalar Upload
 
 input RecipieRelateToManyInput {
   create: [RecipieCreateInput]
@@ -234,9 +301,11 @@ input UserCreateInput {
   name: String
   email: String
   password: String
+  image: ImageFieldInput
   recipies: RecipieRelateToManyInput
   following: UserRelateToManyInput
   followers: UserRelateToManyInput
+  likes: RecipieRelateToManyInput
 }
 
 input UsersCreateInput {
@@ -249,6 +318,7 @@ input UsersCreateInput {
 type Recipie {
   id: ID!
   name: String
+  category: String
   description: String
   author: User
   image: ImageFieldOutput
@@ -297,23 +367,28 @@ type Recipie {
       reason: "This query will be removed in a future version. Please use ingredientsCount instead."
     )
   ingredientsCount(where: IngredientWhereInput! = {}): Int
-}
-
-interface ImageFieldOutput {
-  id: ID!
-  filesize: Int!
-  width: Int!
-  height: Int!
-  extension: ImageExtension!
-  ref: String!
-  src: String!
-}
-
-enum ImageExtension {
-  jpg
-  png
-  webp
-  gif
+  likes(
+    where: UserWhereInput! = {}
+    search: String
+    sortBy: [SortUsersBy!]
+      @deprecated(reason: "sortBy has been deprecated in favour of orderBy")
+    orderBy: [UserOrderByInput!]! = []
+    first: Int
+    skip: Int! = 0
+  ): [User!]
+  _likesMeta(
+    where: UserWhereInput! = {}
+    search: String
+    sortBy: [SortUsersBy!]
+      @deprecated(reason: "sortBy has been deprecated in favour of orderBy")
+    orderBy: [UserOrderByInput!]! = []
+    first: Int
+    skip: Int! = 0
+  ): _QueryMeta
+    @deprecated(
+      reason: "This query will be removed in a future version. Please use likesCount instead."
+    )
+  likesCount(where: UserWhereInput! = {}): Int
 }
 
 input RecipieWhereInput {
@@ -345,6 +420,10 @@ input RecipieWhereInput {
   name_not_ends_with_i: String
   name_in: [String]
   name_not_in: [String]
+  category: String
+  category_not: String
+  category_in: [String]
+  category_not_in: [String]
   description: String
   description_not: String
   description_contains: String
@@ -401,6 +480,21 @@ input RecipieWhereInput {
    condition must be false for all nodes
   """
   ingredients_none: IngredientWhereInput
+
+  """
+   condition must be true for all nodes
+  """
+  likes_every: UserWhereInput
+
+  """
+   condition must be true for at least 1 node
+  """
+  likes_some: UserWhereInput
+
+  """
+   condition must be false for all nodes
+  """
+  likes_none: UserWhereInput
 }
 
 input RecipieWhereUniqueInput {
@@ -412,6 +506,8 @@ enum SortRecipiesBy {
   id_DESC
   name_ASC
   name_DESC
+  category_ASC
+  category_DESC
   description_ASC
   description_DESC
   time_ASC
@@ -421,18 +517,21 @@ enum SortRecipiesBy {
 input RecipieOrderByInput {
   id: OrderDirection
   name: OrderDirection
+  category: OrderDirection
   description: OrderDirection
   time: OrderDirection
 }
 
 input RecipieUpdateInput {
   name: String
+  category: String
   description: String
   author: UserRelateToOneInput
   image: ImageFieldInput
   steps: StepRelateToManyInput
   time: String
   ingredients: IngredientRelateToManyInput
+  likes: UserRelateToManyInput
 }
 
 input UserRelateToOneInput {
@@ -441,16 +540,6 @@ input UserRelateToOneInput {
   disconnect: UserWhereUniqueInput
   disconnectAll: Boolean
 }
-
-input ImageFieldInput {
-  upload: Upload
-  ref: String
-}
-
-"""
-The `Upload` scalar type represents a file upload.
-"""
-scalar Upload
 
 input StepRelateToManyInput {
   create: [StepCreateInput]
@@ -473,12 +562,14 @@ input RecipiesUpdateInput {
 
 input RecipieCreateInput {
   name: String
+  category: String
   description: String
   author: UserRelateToOneInput
   image: ImageFieldInput
   steps: StepRelateToManyInput
   time: String
   ingredients: IngredientRelateToManyInput
+  likes: UserRelateToManyInput
 }
 
 input RecipiesCreateInput {

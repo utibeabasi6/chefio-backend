@@ -3,7 +3,7 @@ import {
   text,
   relationship,
   password,
-  timestamp,
+  select,
   image,
   float,
   decimal,
@@ -15,21 +15,36 @@ export const lists = createSchema({
       name: text({ isRequired: true }),
       email: text({ isRequired: true, isUnique: true }),
       password: password({ isRequired: true }),
+      image: image(),
       recipies: relationship({ ref: 'Recipie.author', many: true }),
       following: relationship({ ref: 'User.followers', many: true }),
       followers: relationship({ ref: 'User.following', many: true }),
+      likes: relationship({ ref: 'Recipie.likes', many: true }),
     },
   }),
-  
+
   Recipie: list({
     fields: {
       name: text(),
+      category: select({
+        options: [
+          {
+            label: "Food",
+            value: "Food"
+          },
+          {
+            label: "Drink",
+            value: "Drink"
+          },
+        ], defaultValue: "Food",
+      }),
       description: text(),
-      author: relationship({ref: "User.recipies", many: false,}),
+      author: relationship({ ref: "User.recipies", many: false, }),
       image: image(),
-      steps: relationship({ref: "Step", many: true}),
+      steps: relationship({ ref: "Step", many: true }),
       time: decimal(),
-      ingredients: relationship({many: true, ref: 'Ingredient'})
+      ingredients: relationship({ many: true, ref: 'Ingredient' }),
+      likes: relationship({many: true, ref: "User.likes"})
     },
   }),
   Step: list({

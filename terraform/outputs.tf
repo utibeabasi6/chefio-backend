@@ -1,4 +1,4 @@
-output "Instance1_eip"{
-    value = aws_eip.instance1_eip.public_ip
+output "Db_instance_eip"{
+    value = aws_eip.db_instance_eip.public_ip
 }
 

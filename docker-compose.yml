@@ -1,12 +1,12 @@
 services:
-    api:
-        build: ./api
-        environment: 
-            - SESSION_SECRET=adadkadkgljkdfkdsfbasdkhfaks,hfbhsdbflasfiSHFILAHEFIaskfAHFVislahflsAHEFlsiehfiadlliqyGDLQ6T8QEUYDGa
-        ports:
-            - "3000:3000"
-        links: 
-            - db
+    # api:
+    #     build: ./api
+    #     environment: 
+    #         - SESSION_SECRET=adadkadkgljkdfkdsfbasdkhfaks,hfbhsdbflasfiSHFILAHEFIaskfAHFVislahflsAHEFlsiehfiadlliqyGDLQ6T8QEUYDGa
+    #     ports:
+    #         - "3000:3000"
+    #     links: 
+    #         - db
     db:
         environment: 
             - POSTGRES_PASSWORD=gopher

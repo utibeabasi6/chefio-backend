@@ -37,7 +37,7 @@ export default withAuth(
   config({
     db: {
       adapter: 'prisma_postgresql',
-      url: process.env.DATABASE_URL || 'postgres://postgres:gopher@db:5432/chefio',
+      url: process.env.DATABASE_URL || 'postgres://postgres:gopher@3.19.3.238:5432/chefio',
       useMigrations: true,
     },
     ui: {

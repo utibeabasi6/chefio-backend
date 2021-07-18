@@ -12,3 +12,5 @@ services:
             - POSTGRES_PASSWORD=gopher
             - POSTGRES_DB=chefio
         image: postgres:alpine
+        ports:
+            - "5432:5432"

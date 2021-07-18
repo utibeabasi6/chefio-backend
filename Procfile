@@ -1,1 +1,1 @@
-web: cd api && yarn start
+web: cd api && npm start

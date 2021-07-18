@@ -35,6 +35,9 @@ const session = statelessSessions({
 
 export default withAuth(
   config({
+    server: {
+      port: 8080
+    },
     db: {
       adapter: 'prisma_postgresql',
       url: process.env.DATABASE_URL || 'postgres://postgres:gopher@3.19.3.238:5432/chefio',

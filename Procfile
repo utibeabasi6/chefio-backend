@@ -1,1 +1,1 @@
-web: cd api && npm install && npm run build && npm start
+web: cd api && npm install && npm run postinstall && npm run build && npm start

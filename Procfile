@@ -1,1 +1,1 @@
-web: cd api && npm install && npm dev
+web: cd api && npm install && npm run dev

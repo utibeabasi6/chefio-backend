@@ -26,22 +26,17 @@ model User {
 }
 
 model Recipie {
-  id              String       @id @default(cuid())
-  name            String?
-  category        String?
-  description     String?
-  author          User?        @relation("Recipie_author", fields: [authorId], references: [id])
-  authorId        String?      @map("author")
-  image_filesize  Int?
-  image_extension String?
-  image_width     Int?
-  image_height    Int?
-  image_mode      String?
-  image_id        String?
-  steps           Step[]       @relation("Recipie_steps_many")
-  time            Decimal?     @postgresql.Decimal(18, 4)
-  ingredients     Ingredient[] @relation("Recipie_ingredients_many")
-  likes           User[]       @relation("Recipie_likes_User_likes")
+  id          String       @id @default(cuid())
+  name        String?
+  category    String?
+  description String?
+  author      User?        @relation("Recipie_author", fields: [authorId], references: [id])
+  authorId    String?      @map("author")
+  image       String?
+  steps       Step[]       @relation("Recipie_steps_many")
+  time        Decimal?     @postgresql.Decimal(18, 4)
+  ingredients Ingredient[] @relation("Recipie_ingredients_many")
+  likes       User[]       @relation("Recipie_likes_User_likes")
 
   @@index([authorId])
 }
@@ -49,12 +44,7 @@ model Recipie {
 model Step {
   id                 String    @id @default(cuid())
   name               String?
-  image_filesize     Int?
-  image_extension    String?
-  image_width        Int?
-  image_height       Int?
-  image_mode         String?
-  image_id           String?
+  image              String?
   from_Recipie_steps Recipie[] @relation("Recipie_steps_many")
 }
 

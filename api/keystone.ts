@@ -33,6 +33,12 @@ const session = statelessSessions({
   secret: sessionSecret,
 });
 
+function buildDbUrl() {
+  if (process.env.DATABASE_URL) {
+    return `postgres://postgres:gopher@${process.env.DATABASE_URL}:5432/chefio`
+  }
+}
+
 export default withAuth(
   config({
     server: {
@@ -40,7 +46,7 @@ export default withAuth(
     },
     db: {
       adapter: 'prisma_postgresql',
-      url: process.env.DATABASE_URL || 'postgres://postgres:gopher@3.19.3.238:5432/chefio',
+      url: buildDbUrl() || 'postgres://postgres:gopher@localhost:5432/chefio',
       useMigrations: true,
     },
     ui: {

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chefio-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chefio-database
+  template:
+    metadata:
+        labels:
+          app: chefio-database
+    spec:
+      containers:
+      - name: chefio-database-container
+        image: postgres
+        ports:
+          - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              key: postgres_db
+              name: chefio-secret
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: postgres_password
+              name: chefio-secret
+        imagePullPolicy: IfNotPresent
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: chefio-database-service
+spec:
+  selector:
+    app: chefio-database
+  ports:
+  - port: 5432
+    targetPort: 5432

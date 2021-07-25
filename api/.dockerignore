@@ -1,4 +1,4 @@
-node_modules
-.keystone/admin
+node_modules/
+.keystone
 *.log
-public/
+public

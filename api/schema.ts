@@ -40,7 +40,7 @@ export const lists = createSchema({
       }),
       description: text(),
       author: relationship({ ref: "User.recipies", many: false, }),
-      image: image(),
+      image: text(),
       steps: relationship({ ref: "Step", many: true }),
       time: decimal(),
       ingredients: relationship({ many: true, ref: 'Ingredient' }),
@@ -50,7 +50,7 @@ export const lists = createSchema({
   Step: list({
     fields: {
       name: text(),
-      image: image()
+      image: text()
     }
   }),
   Ingredient: list({

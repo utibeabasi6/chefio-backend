@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chefio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chefio
+  template:
+    metadata:
+      labels:
+        app: chefio
+    spec:
+      volumes:
+        - name: chefio-volume
+          persistentVolumeClaim:
+            claimName: chefio-volume-claim
+      containers:
+        - name: chefio-container
+          image: utibeabasi6/chefio
+          ports:
+          - containerPort: 8080
+          volumeMounts:
+            - mountPath: "/Chefio/public"
+              name: chefio-volume
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: chefio-database-url
+                  name: chefio-config-map
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: chefio-session-secret
+                  name: chefio-secret
+          imagePullPolicy: IfNotPresent
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: chefio-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: chefio
+  ports:
+    - port: 3000
+      protocol: TCP
+      nodePort: 30000
+      targetPort: 8080
+

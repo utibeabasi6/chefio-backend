@@ -12,18 +12,11 @@ spec:
       labels:
         app: chefio
     spec:
-      volumes:
-        - name: chefio-volume
-          persistentVolumeClaim:
-            claimName: chefio-volume-claim
       containers:
         - name: chefio-container
           image: utibeabasi6/chefio
           ports:
           - containerPort: 8080
-          volumeMounts:
-            - mountPath: "/Chefio/public"
-              name: chefio-volume
           env:
             - name: DATABASE_URL
               valueFrom:
